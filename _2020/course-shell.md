@@ -414,3 +414,118 @@ far, and we will try to help you out.
  1. Write a command that reads out your laptop battery's power level or your
     desktop machine's CPU temperature from `/sys`. Note: if you're a macOS
     user, your OS doesn't have sysfs, so you can skip this exercise.
+
+
+## Completed Exercises: Andrey Popov
+
+### 1. Ensure you are using the correct shell:
+
+```sh
+echo $SHELL  # h
+```
+
+---
+
+### 2. Create a new directory called `missing` under `/tmp`:
+
+```sh
+mkdir /tmp/missing
+```
+
+---
+
+### 3. Look up the `touch` program using `man`:
+
+```sh
+man touch
+```
+
+---
+
+### 4. Use `touch` to create a new file called `semester` in `missing`:
+
+```sh
+touch /tmp/missing/semester
+```
+
+---
+
+### 5. Write lines into the file `semester`:
+
+```sh
+echo '#!/bin/sh' > /tmp/missing/semester
+echo 'curl --head --silent https://missing.csail.mit.edu' >> /tmp/missing/semester
+```
+
+*(Using single quotes `'` ensures Bash treats special characters literally.)*
+
+---
+
+### 6. Attempt to execute the script and understand why it doesn't run:
+
+```sh
+cd /tmp/missing
+./semester  # Returns permission denied error
+ls -l semester  # Check file permissions
+```
+![alt text](image.png)
+---
+
+### 7. Run the script explicitly with `sh` interpreter:
+
+```sh
+sh semester 
+```
+
+*(It works because you're explicitly calling the interpreter.)*
+
+---
+
+### 8. Look up the `chmod` program:
+
+```sh
+man chmod
+```
+
+---
+
+### 9. Use `chmod` to make the script executable directly:
+
+```sh
+chmod +x semester
+./semester 
+```
+
+*(The shell knows to use `sh` due to the shebang `#!/bin/sh`.)*
+
+---
+
+### 10. Write the "last modified" date output from `semester` into `last-modified.txt` in home directory:
+
+```sh
+./semester | grep -i 'last-modified' > ~/last-modified.txt
+```
+
+---
+
+### 11. Command to check laptop battery's power level or CPU temperature:
+
+- **Battery Level:**
+
+```sh
+echo "Battery Level: $(cat /sys/class/power_supply/BAT0/capacity)%"
+```
+
+- **CPU Temperature:**
+
+```sh
+echo "CPU Temperature: $(($(cat /sys/class/thermal/thermal_zone0/temp)/1000))°C" # This will work only on linux machine
+```
+```sh
+(Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature).CurrentTemperature / 10 - 273.15 # Windows PowerShell Command
+```
+
+
+---
+
+### Completed Exercises: Andrey Popov

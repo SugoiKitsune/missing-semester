@@ -12,7 +12,6 @@ In this lecture we will go through several ways in which you can improve your wo
 
 We will also learn about different ways to improve your shell and other tools, by defining aliases and configuring them using dotfiles. Both of these can help you save time, e.g. by using the same configurations in all your machines without having to type long commands. We will look at how to work with remote machines using SSH.
 
-
 # Job Control
 
 In some cases you will need to interrupt a job while it is executing, for instance if a command is taking too long to complete (such as a `find` with a very large directory structure to search through).
@@ -124,7 +123,6 @@ A special signal is `SIGKILL` since it cannot be captured by the process and it 
 
 You can learn more about these and other signals [here](https://en.wikipedia.org/wiki/Signal_(IPC)) or typing [`man signal`](https://www.man7.org/linux/man-pages/man7/signal.7.html) or `kill -l`.
 
-
 # Terminal Multiplexers
 
 When using the command line interface you will often want to run more than one thing at once.
@@ -138,28 +136,29 @@ This can make your workflow much better when working with remote machines since 
 The most popular terminal multiplexer these days is [`tmux`](https://www.man7.org/linux/man-pages/man1/tmux.1.html). `tmux` is highly configurable and by using the associated keybindings you can create multiple tabs and panes and quickly navigate through them.
 
 `tmux` expects you to know its keybindings, and they all have the form `<C-b> x` where that means (1) press `Ctrl+b`, (2) release `Ctrl+b`, and then (3) press `x`. `tmux` has the following hierarchy of objects:
+
 - **Sessions** - a session is an independent workspace with one or more windows
-    + `tmux` starts a new session.
-    + `tmux new -s NAME` starts it with that name.
-    + `tmux ls` lists the current sessions
-    + Within `tmux` typing `<C-b> d`  detaches the current session
-    + `tmux a` attaches the last session. You can use `-t` flag to specify which
+  - `tmux` starts a new session.
+  - `tmux new -s NAME` starts it with that name.
+  - `tmux ls` lists the current sessions
+  - Within `tmux` typing `<C-b> d`  detaches the current session
+  - `tmux a` attaches the last session. You can use `-t` flag to specify which
 
 - **Windows** - Equivalent to tabs in editors or browsers, they are visually separate parts of the same session
-    + `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
-    + `<C-b> N` Go to the _N_ th window. Note they are numbered
-    + `<C-b> p` Goes to the previous window
-    + `<C-b> n` Goes to the next window
-    + `<C-b> ,` Rename the current window
-    + `<C-b> w` List current windows
+  - `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
+  - `<C-b> N` Go to the _N_ th window. Note they are numbered
+  - `<C-b> p` Goes to the previous window
+  - `<C-b> n` Goes to the next window
+  - `<C-b> ,` Rename the current window
+  - `<C-b> w` List current windows
 
 - **Panes** - Like vim splits, panes let you have multiple shells in the same visual display.
-    + `<C-b> "` Split the current pane horizontally
-    + `<C-b> %` Split the current pane vertically
-    + `<C-b> <direction>` Move to the pane in the specified _direction_. Direction here means arrow keys.
-    + `<C-b> z` Toggle zoom for the current pane
-    + `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
-    + `<C-b> <space>` Cycle through pane arrangements.
+  - `<C-b> "` Split the current pane horizontally
+  - `<C-b> %` Split the current pane vertically
+  - `<C-b> <direction>` Move to the pane in the specified _direction_. Direction here means arrow keys.
+  - `<C-b> z` Toggle zoom for the current pane
+  - `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
+  - `<C-b> <space>` Cycle through pane arrangements.
 
 For further reading,
 [here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) is a quick tutorial on `tmux` and [this](http://linuxcommand.org/lc3_adv_termmux.php) has a more detailed explanation that covers the original `screen` command. You might also want to familiarize yourself with [`screen`](https://www.man7.org/linux/man-pages/man1/screen.1.html), since it comes installed in most UNIX systems.
@@ -213,7 +212,6 @@ alias ll
 Note that aliases do not persist shell sessions by default.
 To make an alias persistent you need to include it in shell startup files, like `.bashrc` or `.zshrc`, which we are going to introduce in the next section.
 
-
 # Dotfiles
 
 Many programs are configured using plain-text files known as _dotfiles_
@@ -265,7 +263,6 @@ copy configurations though).
 All of the class instructors have their dotfiles publicly accessible on GitHub: [Anish](https://github.com/anishathalye/dotfiles),
 [Jon](https://github.com/jonhoo/configs),
 [Jose](https://github.com/jjgo/dotfiles).
-
 
 ## Portability
 
@@ -326,7 +323,6 @@ An often overlooked feature of `ssh` is the ability to run commands directly.
 `ssh foobar@server ls` will execute `ls` in the home folder of foobar.
 It works with pipes, so `ssh foobar@server ls | grep PATTERN` will grep locally the remote output of `ls` and `ls | ssh foobar@server grep PATTERN` will grep remotely the local output of `ls`.
 
-
 ## SSH Keys
 
 Key-based authentication exploits public-key cryptography to prove to the server that the client owns the secret private key without revealing the key. This way you do not need to reenter your password every time. Nevertheless, the private key (often `~/.ssh/id_rsa` and more recently `~/.ssh/id_ed25519`) is effectively your password, so treat it like so.
@@ -334,9 +330,11 @@ Key-based authentication exploits public-key cryptography to prove to the server
 ### Key generation
 
 To generate a pair you can run [`ssh-keygen`](https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html).
+
 ```bash
 ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 ```
+
 You should choose a passphrase, to avoid someone who gets hold of your private key to access authorized servers. Use [`ssh-agent`](https://www.man7.org/linux/man-pages/man1/ssh-agent.1.html) or [`gpg-agent`](https://linux.die.net/man/1/gpg-agent) so you do not have to type your passphrase every time.
 
 If you have ever configured pushing to GitHub using SSH keys, then you have probably done the steps outlined [here](https://help.github.com/articles/connecting-to-github-with-ssh/) and have a valid key pair already. To check if you have a passphrase and validate it you can run `ssh-keygen -y -f /path/to/key`.
@@ -378,10 +376,10 @@ comes in two flavors: Local Port Forwarding and Remote Port Forwarding (see the 
 
 The most common scenario is local port forwarding, where a service in the remote machine listens in a port and you want to link a port in your local machine to forward to the remote port. For example, if we execute  `jupyter notebook` in the remote server that listens to the port `8888`. Thus, to forward that to the local port `9999`, we would do `ssh -L 9999:localhost:8888 foobar@remote_server` and then navigate to `localhost:9999` in our local machine.
 
-
 ## SSH Configuration
 
 We have covered many many arguments that we can pass. A tempting alternative is to create shell aliases that look like
+
 ```bash
 alias my_server="ssh -i ~/.id_ed25519 --port 2222 -L 9999:localhost:8888 foobar@remote_server
 ```
@@ -403,7 +401,6 @@ Host *.mit.edu
 
 An additional advantage of using the `~/.ssh/config` file over aliases  is that other programs like `scp`, `rsync`, `mosh`, &c are able to read it as well and convert the settings into the corresponding flags.
 
-
 Note that the `~/.ssh/config` file can be considered a dotfile, and in general it is fine for it to be included with the rest of your dotfiles. However, if you make it public, think about the information that you are potentially providing strangers on the internet: addresses of your servers, users, open ports, &c. This may facilitate some types of attacks so be thoughtful about sharing your SSH configuration.
 
 Server side configuration is usually specified in `/etc/ssh/sshd_config`. Here you can make changes like disabling password authentication, changing ssh ports, enabling X11 forwarding, &c. You can specify config settings on a per user basis.
@@ -414,7 +411,6 @@ A common pain when connecting to a remote server are disconnections due to your 
 
 Sometimes it is convenient to mount a remote folder. [sshfs](https://github.com/libfuse/sshfs) can mount a folder on a remote server
 locally, and then you can use a local editor.
-
 
 # Shells & Frameworks
 
@@ -472,12 +468,12 @@ One way to achieve this is to use the [`wait`](https://www.man7.org/linux/man-pa
 
 1. Create an alias `dc` that resolves to `cd` for when you type it wrongly.
 
-1.  Run `history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -n | tail -n 10`  to get your top 10 most used commands and consider writing shorter aliases for them. Note: this works for Bash; if you're using ZSH, use `history 1` instead of just `history`.
-
+1. Run `history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -n | tail -n 10`  to get your top 10 most used commands and consider writing shorter aliases for them. Note: this works for Bash; if you're using ZSH, use `history 1` instead of just `history`.
 
 ## Dotfiles
 
 Let's get you up to speed with dotfiles.
+
 1. Create a folder for your dotfiles and set up version
    control.
 1. Add a configuration for at least one program, e.g. your shell, with some
@@ -502,8 +498,146 @@ Install a Linux virtual machine (or use an already existing one) for this exerci
         IdentityFile ~/.ssh/id_ed25519
         LocalForward 9999 localhost:8888
     ```
+
 1. Use `ssh-copy-id vm` to copy your ssh key to the server.
 1. Start a webserver in your VM by executing `python -m http.server 8888`. Access the VM webserver by navigating to `http://localhost:9999` in your machine.
 1. Edit your SSH server config by doing  `sudo vim /etc/ssh/sshd_config` and disable password authentication by editing the value of `PasswordAuthentication`. Disable root login by editing the value of `PermitRootLogin`. Restart the `ssh` service with `sudo service sshd restart`. Try sshing in again.
 1. (Challenge) Install [`mosh`](https://mosh.org/) in the VM and establish a connection. Then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
 1. (Challenge) Look into what the `-N` and `-f` flags do in `ssh` and figure out a command to achieve background port forwarding.
+
+ Shell Workflow Improvements
+
+## Completed Exercises: Andrey Popov
+
+### A) Job Control
+
+#### **1. Start a `sleep` job, background it, and kill it**
+
+```sh
+sleep 10000 &
+jobs   # Check backgrounded jobs
+pgrep -af sleep  # Find the PID of the sleep command
+pkill -f sleep  # To kill the command
+```
+
+##
+
+#### **2. Wait for a process before running another**
+
+```sh
+sleep 60 &   # Start a background sleep job
+wait %1   # Wait for the job to finish before continuing
+ls   # Runs after sleep 60 finishes
+```
+
+##
+
+#### **3. `pidwait` function to wait for a PID**
+
+```sh
+pidwait() {
+    local pid=$1
+    while kill -0 $pid 2>/dev/null; do
+        sleep 1  # Sleep to prevent high CPU usage
+    done
+}
+```
+
+**Usage:**
+
+```sh
+sleep 10000 &
+pidwait $!  # Waits for sleep process to finish
+echo "Process finished!"
+```
+
+##
+
+## B) Terminal Multiplexer
+
+#### **Basic `tmux` Commands**
+
+```sh
+tmux new -s mysession  # Start a new tmux session
+tmux ls  # List active sessions
+tmux attach -t mysession  # Reattach a session
+Ctrl-b %  # Split vertically
+Ctrl-b "  # Split horizontally
+```
+
+##
+
+## C) Aliases
+
+#### **1. Create a `dc` alias for `cd`**
+
+```sh
+alias dc="cd"
+echo 'alias dc="cd"' >> ~/.bashrc
+source ~/.bashrc  # Apply changes
+```
+
+##
+
+#### **2. Find the top 10 most used commands**
+
+```sh
+history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -nr | head -n 10
+```
+
+##
+
+## D) Dotfiles Setup
+
+#### **1. Create a dotfiles repository**
+
+```sh
+mkdir ~/dotfiles
+cd ~/dotfiles
+git init
+```
+
+##
+
+#### **2. Move and symlink configurations**
+
+```sh
+mv ~/.bashrc ~/dotfiles/bashrc
+ln -s ~/dotfiles/bashrc ~/.bashrc
+```
+
+##
+
+## E) Remote Machines
+
+#### **1. Generate an SSH Key**
+
+```sh
+ssh-keygen -o -a 100 -t ed25519
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+##
+
+#### **2. Configure SSH**
+
+Edit `~/.ssh/config`:
+
+```ini
+Host vm
+    User username
+    HostName 192.168.1.100
+    IdentityFile ~/.ssh/id_ed25519
+    LocalForward 9999 localhost:8888
+```
+
+##
+
+## F) Challenge Exercises
+
+#### **Background Port Forwarding**
+
+```sh
+ssh -N -f -L 9999:localhost:8888 vm
+```

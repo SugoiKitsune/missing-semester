@@ -318,7 +318,7 @@ More complex tools exist to quickly get an overview of a directory structure: [`
 ls -lath --color=auto
 {% endcomment %}
 
-1. Write bash functions  `marco` and `polo` that do the following.
+2. Write bash functions  `marco` and `polo` that do the following.
 Whenever you execute `marco` the current working directory should be saved in some manner, then when you execute `polo`, no matter what directory you are in, `polo` should `cd` you back to the directory where you executed `marco`.
 For ease of debugging you can write the code in a file `marco.sh` and (re)load the definitions to your shell by executing `source marco.sh`.
 
@@ -332,7 +332,7 @@ polo() {
 }
 {% endcomment %}
 
-1. Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run.
+3. Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run.
 Write a bash script that runs the following script until it fails and captures its standard output and error streams to files and prints everything at the end.
 Bonus points if you can also report how many runs it took for the script to fail.
 
@@ -364,7 +364,7 @@ echo "found error after $count runs"
 cat out.txt
 {% endcomment %}
 
-1. As we covered in the lecture `find`'s `-exec` can be very powerful for performing operations over the files we are searching for.
+4. As we covered in the lecture `find`'s `-exec` can be very powerful for performing operations over the files we are searching for.
 However, what if we want to do something with **all** the files, like creating a zip file?
 As you have seen so far commands will take input from both arguments and STDIN.
 When piping commands, we are connecting STDOUT to STDIN, but some commands like `tar` take inputs from arguments.
@@ -378,4 +378,89 @@ For example `ls | xargs rm` will delete the files in the current directory.
 
     If you're on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0` flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
 
-1. (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
+5. (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
+
+
+
+#### **Completed Exercises: Andrey Popov**
+
+#### **1) File Listing with ls**
+
+#### **A. List Files with All, Human Readable Sizes, Sorted by Recency, and Colorized Output**
+
+```sh
+ls -lath --color=auto
+```
+##
+
+#### **2) Bash Functions for Directory Bookmarking**
+
+#### **A. Define `marco` and `polo` Functions to Save and Restore Directory**
+
+```sh
+marco() {
+    export MARCO=$(pwd)
+}
+
+polo() {
+    cd "$MARCO"
+}
+```
+##
+
+#### **3) Script to Run Until Failure and Capture Output**
+
+#### **A. Run a Command Until It Fails, Capture Output and Error, and Count Runs**
+
+```sh
+#!/usr/bin/env bash
+
+count=0
+output_file="failure_output.log"
+
+while true; do
+    count=$(( count + 1 ))
+    ./random.sh &> "$output_file"
+    if [ $? -ne 0 ]; then
+        break
+    fi
+done
+
+echo "Found error after $count runs"
+cat "$output_file"
+```
+##
+
+#### *4) Create a Zip Archive of All HTML Files**
+
+#### **A. Recursively Find All HTML Files and Create a Zip Archive (GNU/Linux)**
+
+```sh
+find . -type f -name "*.html" | xargs -d '\n' tar -cvzf archive.tar.gz
+```
+
+##
+
+#### **B. Recursively Find All HTML Files and Create a Zip Archive (macOS)**
+
+```sh
+find . -type f -name "*.html" -print0 | xargs -0 tar -cvzf archive.tar.gz
+```
+##
+
+
+#### **5) Recursively Find the Most Recently Modified File**
+
+#### **A. Find the Single Most Recently Modified File (GNU/Linux)**
+
+```sh
+find . -type f -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-
+```
+##
+
+#### **B. List All Files by Recency (GNU/Linux)**
+
+```sh
+find . -type f -printf '%T@ %p\n' | sort -nr | cut -d' ' -f2-
+```
+##
